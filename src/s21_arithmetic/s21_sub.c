@@ -24,12 +24,12 @@ int s21_sub(s21_decimal value_1, s21_decimal value_2, s21_decimal *result) {
     s21_powNormilize(&value_1, &value_2);
     int power = getPower(value_1);
     switch (getSign(value_1) * getSign(value_2)) {
-    case 1:
-      positive_sub(value_1, value_2, result, power);
-      break;
-    case -1:
-      negative_sub(value_1, value_2, result, &error);
-      break;
+      case 1:
+        positive_sub(value_1, value_2, result, power);
+        break;
+      case -1:
+        negative_sub(value_1, value_2, result, &error);
+        break;
     }
   }
   makeResult(error, result);
@@ -37,22 +37,22 @@ int s21_sub(s21_decimal value_1, s21_decimal value_2, s21_decimal *result) {
 }
 //Вычитание без учета порядка
 void Light_sub(s21_decimal value_1, s21_decimal value_2, s21_decimal *result) {
-void memcheck(result);
+  memcheck(result);
   switch (getSign(value_1) * getSign(value_2)) {
-  case 1:
-    positive_sub(value_1, value_2, result, 0);
-    break;
-  case -1:
-    if (getSign(value_1) == (-1)) {
-      setSign(&value_1, 1);
-      addition(value_1, value_2, result, 0);
-      setSign(result, -1);
-    }
-    if (getSign(value_2) == (-1)) {
-      setSign(&value_2, 1);
-      addition(value_1, value_2, result, 0);
-    }
-    break;
+    case 1:
+      positive_sub(value_1, value_2, result, 0);
+      break;
+    case -1:
+      if (getSign(value_1) == (-1)) {
+        setSign(&value_1, 1);
+        addition(value_1, value_2, result, 0);
+        setSign(result, -1);
+      }
+      if (getSign(value_2) == (-1)) {
+        setSign(&value_2, 1);
+        addition(value_1, value_2, result, 0);
+      }
+      break;
   }
 }
 
@@ -71,14 +71,14 @@ void negative_sub(s21_decimal value_1, s21_decimal value_2, s21_decimal *result,
 void add_flow(s21_decimal value_1, s21_decimal value_2, s21_decimal *result,
               s21_error_type *error) {
   switch (s21_add(value_2, value_1, result)) {
-  case 1:
-    error->plus_inf = 1;
-    break;
-  case 2:
-    error->minus_inf = 2;
-    break;
-  default:
-    break;
+    case 1:
+      error->plus_inf = 1;
+      break;
+    case 2:
+      error->minus_inf = 2;
+      break;
+    default:
+      break;
   }
 }
 

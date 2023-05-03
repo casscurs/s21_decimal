@@ -6,8 +6,8 @@
 //  begin bits[3] spec functions
 ////
 
-//memset в сочентании с проверкой
-void memcheck(s21_decimal *result){
+// memset в сочентании с проверкой
+void memcheck(s21_decimal *result) {
   if (result == NULL) {
     exit(1);
   }
