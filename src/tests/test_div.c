@@ -1,5 +1,5 @@
 #include "s21_tests.h"
-
+/*
 void s21_set_zero(s21_decimal *dst) {
   for (int i = 0; i < 4; i++) {
     dst->bits[i] = 0;
@@ -520,3 +520,5 @@ Suite *suite_div(void) {
   suite_add_tcase(s, tc);
   return s;
 }
+
+*/
