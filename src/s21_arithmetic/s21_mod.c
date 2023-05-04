@@ -8,11 +8,7 @@
 // }
 
 void s21_bit_mod(s21_decimal delim, s21_decimal delit, s21_decimal *ostatok) {
-  // осаток если целая часть ноль
-  if (ostatok == NULL) {
-    exit(1);
-  }
-  memset(ostatok, 0, sizeof(s21_decimal));
+  memcheck(ostatok);
   if (is_greater_M(delit, delim)) {
     *ostatok = delim;
   } else {

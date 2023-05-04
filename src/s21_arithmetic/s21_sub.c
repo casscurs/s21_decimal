@@ -16,10 +16,6 @@ void add_flow(s21_decimal value_1, s21_decimal value_2, s21_decimal *result,
               s21_error_type *error);
 
 int s21_sub(s21_decimal value_1, s21_decimal value_2, s21_decimal *result) {
-  if (result == NULL) {
-    exit(1);
-  }
-  memset(result, 0, sizeof(s21_decimal));
   s21_error_type error = {0};
   s21_decimal mv2 = {0};
   mv2 = value_2;
@@ -39,6 +35,27 @@ int s21_sub(s21_decimal value_1, s21_decimal value_2, s21_decimal *result) {
   makeResult(error, result);
   return error.plus_inf ? 1 : error.minus_inf ? 2 : error.nan ? 3 : 0;
 }
+// Вычитание без учета порядка
+void Light_sub(s21_decimal value_1, s21_decimal value_2, s21_decimal *result) {
+  memcheck(result);
+  switch (getSign(value_1) * getSign(value_2)) {
+    case 1:
+      positive_sub(value_1, value_2, result, 0);
+      break;
+    case -1:
+      if (getSign(value_1) == (-1)) {
+        setSign(&value_1, 1);
+        addition(value_1, value_2, result, 0);
+        setSign(result, -1);
+      }
+      if (getSign(value_2) == (-1)) {
+        setSign(&value_2, 1);
+        addition(value_1, value_2, result, 0);
+      }
+      break;
+  }
+}
+
 void negative_sub(s21_decimal value_1, s21_decimal value_2, s21_decimal *result,
                   s21_error_type *error) {
   if (getSign(value_1) == (-1)) {
@@ -64,15 +81,7 @@ void add_flow(s21_decimal value_1, s21_decimal value_2, s21_decimal *result,
       break;
   }
 }
-void Light_sub(s21_decimal value_1, s21_decimal value_2, s21_decimal *result) {
-  if (is_greater_M(value_1, value_2)) {
-    s21_bit_sub(value_1, value_2, result);
-  }
-  if (is_greater_M(value_2, value_1)) {
-    s21_bit_sub(value_2, value_1, result);
-    setSign(result, -1);
-  }
-}
+
 void positive_sub(s21_decimal value_1, s21_decimal value_2, s21_decimal *result,
                   int power) {
   if ((getSign(value_1) == (-1)) && (getSign(value_2) == (-1))) {
@@ -118,10 +127,6 @@ void v1_equal_v2(s21_decimal value_1, s21_decimal value_2, s21_decimal *result,
 }
 
 int s21_bit_sub(s21_decimal bit1, s21_decimal bit2, s21_decimal *res) {
-  if (res == NULL) {
-    exit(1);
-  }
-  memset(res, 0, sizeof(s21_decimal));
   int flag = 0;
   int mindone = 0;
   for (int j = 0; j < 96; ++j) {

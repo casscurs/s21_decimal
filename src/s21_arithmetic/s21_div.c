@@ -8,22 +8,63 @@ s21_decimal Light_mod(s21_decimal delim, s21_decimal delit, s21_decimal chast);
 
 int s21_div(s21_decimal value_1, s21_decimal value_2, s21_decimal *result) {
   s21_error_type error = {0};
-  if (result == NULL) {
-    exit(1);
-  }
-  memset(result, 0, sizeof(s21_decimal));
   if (checkErrorDiv(value_1, value_2, &error)) {
     s21_powNormilize(&value_1, &value_2);
+
     if (check_zero(value_2)) {
-      denomZero(value_1, value_2, &error);
+      // denomZero(value_1, value_2, &error);
+      error.nan = 1;
     } else {
+      int flag = 0;
+      if ((getSign(value_1) == (-1)) ^ (getSign(value_2) == (-1))) {
+        flag = 1;
+      }
+      setSign(&value_1, 1);
+      setSign(&value_2, 1);
+      int power = 0;
+      s21_decimal ost = {0};
+      s21_decimal buf = {0};
+      s21_decimal ten = {{10, 0, 0, 0}};
+      power = 0;
+      if (is_greater_M(value_2, value_1)) {
+        multiplication(value_1, ten, &value_1);
+      }
       s21_bit_division(value_1, value_2, result);
+      ost = Light_mod(value_1, value_2, *result);
+      buf = *result;
+      while ((!check_zero(ost) || checkForOverflow(buf, ten)) &&
+             (power != 28)) {
+        multiplication(buf, ten, &buf);
+        power++;
+        multiplication(ost, ten, &ost);
+
+        s21_bit_division(ost, value_2, result);
+        addition(buf, *result, &buf, 0);
+        ost = Light_mod(ost, value_2, *result);
+      }
+      *result = buf;
+      setPower(result, power);
+      if (flag) {
+        setSign(result, -1);
+      }
     }
+
   } else if ((error.minus_inf || error.plus_inf) && (!isInf(&value_1))) {
     InfDivCase(&error, result);
   }
   makeResult(error, result);
   return error.plus_inf ? 1 : error.minus_inf ? 2 : error.nan ? 3 : 0;
+}
+
+s21_decimal Light_mod(s21_decimal delim, s21_decimal delit, s21_decimal chast) {
+  s21_decimal res = {0};
+  if (is_greater_M(delit, delim)) {
+    res = delim;
+  } else {
+    multiplication(delit, chast, &chast);
+    Light_sub(delim, chast, &res);
+  }
+  return res;
 }
 
 void denomZero(s21_decimal value_1, s21_decimal value_2,
@@ -41,11 +82,9 @@ void InfDivCase(s21_error_type *error, s21_decimal *result) {
   error->minus_inf = 0;
   error->plus_inf = 0;
 }
+// целочисленное деление без учета нормализации и учета краевых случаев
 int s21_bit_division(s21_decimal delim, s21_decimal delit, s21_decimal *chast) {
-  if (chast == NULL) {
-    exit(1);
-  }
-  memset(chast, 0, sizeof(s21_decimal));
+  memcheck(chast);
   int flag = 0;
   if ((getSign(delim) == (-1)) ^ (getSign(delit) == (-1))) {
     flag = 1;
@@ -93,7 +132,7 @@ void div_second_decrement(s21_decimal delit, s21_decimal *delitBuf,
     *delitBuf = leftshift(*delitBuf);
     count2++;
   }
-  s21_sub(*razn, *delitBuf, razn);
+  Light_sub(*razn, *delitBuf, razn);
   memset(delitBuf, 0, sizeof(s21_decimal));
   degree_of_two(delitBuf, count2);
   addition(*chast, *delitBuf, chast, 0);
