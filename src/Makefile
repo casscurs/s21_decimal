@@ -1,5 +1,5 @@
 CC = gcc
-FLAGS = -Wall -Wextra -std=c11
+FLAGS = -Wall -Wextra -std=c11 -g
 SRC_TESTS = main.c $(wildcard tests/*.c)
 SRC_FILES=$(wildcard s21_arithmetic/*.c) $(wildcard s21_comparison/*.c) $(wildcard s21_convertors/*.c) $(wildcard helpers/*.c) $(wildcard s21_another/*.c)
 
