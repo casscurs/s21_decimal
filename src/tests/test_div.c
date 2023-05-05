@@ -476,44 +476,44 @@ Suite *suite_div(void) {
   Suite *s = suite_create("suite_div");
   TCase *tc = tcase_create("div_tc");
   tcase_add_test(tc, div1);
-  // tcase_add_test(tc, div2);
-  tcase_add_test(tc, div3);  // -
+  tcase_add_test(tc, div2);
+  tcase_add_test(tc, div3);
   tcase_add_test(tc, div4);
-  // tcase_add_test(tc, div5);
+  tcase_add_test(tc, div5);
   tcase_add_test(tc, div6);
-  tcase_add_test(tc, div7);  //-
-  tcase_add_test(tc, div8);  //-
-  // tcase_add_test(tc, div9);//-
-  // tcase_add_test(tc, div10);//-
-  // tcase_add_test(tc, div11);//-
-  // tcase_add_test(tc, div12);
-  // tcase_add_test(tc, div13);
-  // tcase_add_test(tc, div14);//-
-  // tcase_add_test(tc, div15);//-
-  // tcase_add_test(tc, div16);//-
-  // tcase_add_test(tc, div17);//-
-
-  // tcase_add_test(tc, div_1_test);
-  // tcase_add_test(tc, div_2_test);
-  // tcase_add_test(tc, div_3_test);
-  // tcase_add_test(tc, div_4_test);//-
-  // tcase_add_test(tc, div_5_test);//-
-  // tcase_add_test(tc, div_6_test);//-
-  // tcase_add_test(tc, div_7_test);//-
-
-  // tcase_add_test(tc, div_8_test);
-  // tcase_add_test(tc, div_9_test);
-  // tcase_add_test(tc, div_10_test);
-  // tcase_add_test(tc, div_11_test);
-  // tcase_add_test(tc, div_12_test);
-  // tcase_add_test(tc, div_13_test);
-  // tcase_add_test(tc, div_14_test);
-  // tcase_add_test(tc, div_15_test);
-  // tcase_add_test(tc, div_16_test);
-  // tcase_add_test(tc, div_17_test);
-  // tcase_add_test(tc, div_18_test);
-  // tcase_add_test(tc, div_19_test);
-  // tcase_add_test(tc, div_20_test);
+  tcase_add_test(tc, div7);
+  tcase_add_test(tc, div8);
+  tcase_add_test(tc, div9);
+  tcase_add_test(tc, div10);
+  tcase_add_test(tc, div11);
+  tcase_add_test(tc, div12);
+  tcase_add_test(tc, div13);
+  tcase_add_test(tc, div14);
+  tcase_add_test(tc, div15);
+  tcase_add_test(tc, div16);  // последнее значение
+  tcase_add_test(tc, div17);
+  tcase_add_test(tc, div_1_test);
+  tcase_add_test(tc, div_2_test);
+  tcase_add_test(tc, div_3_test);
+  tcase_add_test(tc, div_4_test);  // ожидали 48806446, получили 48806447
+  tcase_add_test(tc, div_5_test);
+  tcase_add_test(tc, div_6_test);  // ожидали ошибку 0, получили 1
+  tcase_add_test(
+      tc,
+      div_7_test);  // 786432' failed: res.bits[3] == 720896, 786432 == 786432
+  tcase_add_test(tc, div_8_test);
+  tcase_add_test(tc, div_9_test);
+  tcase_add_test(tc, div_10_test);
+  tcase_add_test(tc, div_11_test);
+  tcase_add_test(tc, div_12_test);
+  tcase_add_test(tc, div_13_test);
+  // tcase_add_test(tc, div_14_test); //sega
+  // tcase_add_test(tc, div_15_test); //sega
+  //  tcase_add_test(tc, div_16_test);
+  //  tcase_add_test(tc, div_17_test);
+  //  tcase_add_test(tc, div_18_test);
+  //  tcase_add_test(tc, div_19_test);
+  //  tcase_add_test(tc, div_20_test);
   // tcase_add_test(tc, div_big_error);
   // tcase_add_test(tc, div_error);
 
