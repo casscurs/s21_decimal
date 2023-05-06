@@ -32,7 +32,7 @@ int s21_div(s21_decimal value_1, s21_decimal value_2, s21_decimal *result) {
         s21_bit_division(value_1, value_2, result);
         ost = Light_mod(value_1, value_2, *result);
         buf = *result;
-        int a=0;
+        int a = 0;
         while (!check_zero(ost) && ((power) != 28) &&
                !checkForOverflow(buf, ten)) {
           multiplication(buf, ten, &buf);
@@ -41,7 +41,7 @@ int s21_div(s21_decimal value_1, s21_decimal value_2, s21_decimal *result) {
           // if (!checkForOverflow(ost, ten)){
           //   multiplication(ost, ten, &ost);
           // }
-          //s21_mul(ost, ten, &ost);
+          // s21_mul(ost, ten, &ost);
           power++;
           s21_bit_division(ost, value_2, result);
           addition(buf, *result, &buf, &a);
@@ -141,6 +141,6 @@ void div_second_decrement(s21_decimal delit, s21_decimal *delitBuf,
   Light_sub(*razn, *delitBuf, razn);
   memset(delitBuf, 0, sizeof(s21_decimal));
   degree_of_two(delitBuf, count2);
-  int a=0;
+  int a = 0;
   addition(*chast, *delitBuf, chast, &a);
 }

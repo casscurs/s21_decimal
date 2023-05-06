@@ -67,7 +67,7 @@ void degree_of_two(s21_decimal *num, int degree) {
   } else {
     s21_decimal one = {0};
     one.bits[0] = 1;
-    int a=0;
+    int a = 0;
     addition(*num, one, num, &a);
   }
 }

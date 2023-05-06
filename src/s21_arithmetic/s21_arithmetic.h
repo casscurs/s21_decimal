@@ -134,36 +134,34 @@ int multiplicationBigDecimal(s21_big_decimal big_value_1,
                              s21_big_decimal big_value_2, s21_decimal *result,
                              int power_result);
 // ОТКРЫВАЙТЕ ФОРТОЧКУ
-// void zero_one_patternBigDecimal(int *mindone, s21_big_decimal *res, int j);
-// void and_patternBigDecimal(int *mindone, s21_big_decimal *res, int j);
-// void one_zero_patternBigDecimal(int *mindone, s21_big_decimal *res, int j);
-// int s21_bit_subBigDecimal(s21_big_decimal bit1, s21_big_decimal bit2,
-//                           s21_big_decimal *res);
-// int decCmp_MBigDecimal(s21_big_decimal el1, s21_big_decimal el2);
-// int is_equal_MBigDecimal(s21_big_decimal el1, s21_big_decimal el2);
-// int is_greater_MBigDecimal(s21_big_decimal el1, s21_big_decimal el2);
-// int is_greater_or_equal_MBigDecimal(s21_big_decimal el1, s21_big_decimal
-// el2);
+void zero_one_patternBigDecimal(int *mindone, s21_big_decimal *res, int j);
+void and_patternBigDecimal(int *mindone, s21_big_decimal *res, int j);
+void one_zero_patternBigDecimal(int *mindone, s21_big_decimal *res, int j);
+int s21_bit_subBigDecimal(s21_big_decimal bit1, s21_big_decimal bit2,
+                          s21_big_decimal *res);
+int decCmp_MBigDecimal(s21_big_decimal el1, s21_big_decimal el2);
+int is_equal_MBigDecimal(s21_big_decimal el1, s21_big_decimal el2);
+int is_greater_MBigDecimal(s21_big_decimal el1, s21_big_decimal el2);
+int is_greater_or_equal_MBigDecimal(s21_big_decimal el1, s21_big_decimal el2);
 
-// void Light_subBigDecimal(s21_big_decimal value_1, s21_big_decimal value_2,
-//                          s21_big_decimal *result);
-// void degree_of_twoBigDeicmal(s21_big_decimal *num, int degree);
-// void div_second_decrementBigDeicmal(s21_big_decimal delit,
-//                                     s21_big_decimal *delitBuf,
-//                                     s21_big_decimal *chast,
-//                                     s21_big_decimal *razn);
+void Light_subBigDecimal(s21_big_decimal value_1, s21_big_decimal value_2,
+                         s21_big_decimal *result);
+void degree_of_twoBigDeicmal(s21_big_decimal *num, int degree);
+void div_second_decrementBigDeicmal(s21_big_decimal delit,
+                                    s21_big_decimal *delitBuf,
+                                    s21_big_decimal *chast,
+                                    s21_big_decimal *razn);
 
-// void div_first_decrementBigDeicmal(s21_big_decimal delim, s21_big_decimal
-// delit,
-//                                    s21_big_decimal *delitBuf,
-//                                    s21_big_decimal *chast);
-// int check_zeroBigDecimal(s21_big_decimal decimal);
-// int s21_bit_divisionBigDeicmal(s21_big_decimal delim, s21_big_decimal delit,
-//                                s21_big_decimal *chast);
-// int is_unevenBigDeicmal(s21_big_decimal bit);
-// void s21_bit_modBigDeicmal(s21_big_decimal delim, s21_big_decimal delit,
-//                            s21_big_decimal *ostatok);
-// s21_big_decimal bank_roundBigDeicmal(s21_big_decimal bit);
+void div_first_decrementBigDeicmal(s21_big_decimal delim, s21_big_decimal delit,
+                                   s21_big_decimal *delitBuf,
+                                   s21_big_decimal *chast);
+int check_zeroBigDecimal(s21_big_decimal decimal);
+int s21_bit_divisionBigDeicmal(s21_big_decimal delim, s21_big_decimal delit,
+                               s21_big_decimal *chast);
+int is_unevenBigDeicmal(s21_big_decimal bit);
+void s21_bit_modBigDeicmal(s21_big_decimal delim, s21_big_decimal delit,
+                           s21_big_decimal *ostatok);
+s21_big_decimal bank_roundBigDeicmal(s21_big_decimal bit);
 // конец бигдецимал раздела - мб имеет смысл отдельный сишник и хедер
 
 #endif  // SRC_S21_ARITHMETIC_S21_ARITHMETIC_H_

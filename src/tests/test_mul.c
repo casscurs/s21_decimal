@@ -765,6 +765,16 @@ START_TEST(mul_99) {
 }
 END_TEST
 
+START_TEST(mulX) {
+  s21_decimal x = {{0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 2 << 16}};
+  s21_decimal y = {{2, 0, 0, 0}};
+  s21_decimal z = {{0, 0, 0, 0}};
+  s21_decimal answer = {{858993459, 858993459, 858993459, (2 << 16)}};
+  ck_assert_int_eq(0, s21_mul(x, y, &z));
+  ck_assert_int_eq(1, s21_is_equal(answer, z));
+}
+END_TEST
+
 Suite *suite_mul(void) {
   Suite *s = suite_create("suite_mul");
   TCase *tc = tcase_create("mul_tc");
@@ -795,7 +805,7 @@ Suite *suite_mul(void) {
   tcase_add_test(tc, mul_7);
   tcase_add_test(tc, mul_8);
   tcase_add_test(tc, mul_99);
-
+  tcase_add_test(tc, mulX);
   suite_add_tcase(s, tc);
   return s;
 }

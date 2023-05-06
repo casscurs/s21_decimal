@@ -38,7 +38,7 @@ int s21_sub(s21_decimal value_1, s21_decimal value_2, s21_decimal *result) {
 // Вычитание без учета порядка
 void Light_sub(s21_decimal value_1, s21_decimal value_2, s21_decimal *result) {
   memcheck(result);
-  int a=0;
+  int a = 0;
   switch (getSign(value_1) * getSign(value_2)) {
     case 1:
       positive_sub(value_1, value_2, result, 0);
