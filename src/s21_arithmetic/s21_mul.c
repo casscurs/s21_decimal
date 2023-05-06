@@ -84,7 +84,8 @@ void multiplication(s21_decimal value_1, s21_decimal value_2,
         setBit(&value_2_copied, 96, 0);
       }
       memset(result, 0, sizeof(s21_decimal));
-      addition(sum, value_2_copied, result, NULL);
+      int a=0;
+      addition(sum, value_2_copied, result, &a);
       sum = *result;
     }
   }
