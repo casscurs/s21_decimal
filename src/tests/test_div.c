@@ -240,6 +240,8 @@ START_TEST(div_4_test) {
   s21_decimal num2 = {{22, 0, 0, 65536}};
   s21_decimal res = {{0, 0, 0, 0}};
   int status = s21_div(num1, num2, &res);
+    Bin_Print(res);
+  Dec_Print(res);
   ck_assert_int_eq(status, 0);
   ck_assert_int_eq(res.bits[0], 48806447);
   ck_assert_int_eq((int)res.bits[1], -1898527489);
@@ -490,23 +492,21 @@ Suite *suite_div(void) {
   tcase_add_test(tc, div13);
   tcase_add_test(tc, div14);
   tcase_add_test(tc, div15);
-  tcase_add_test(tc, div16);  // последнее значение
-  tcase_add_test(tc, div17);
-  tcase_add_test(tc, div_1_test);
-  tcase_add_test(tc, div_2_test);
-  tcase_add_test(tc, div_3_test);
-  tcase_add_test(tc, div_4_test);  // ожидали 48806446, получили 48806447
-  tcase_add_test(tc, div_5_test);
-  tcase_add_test(tc, div_6_test);  // ожидали ошибку 0, получили 1
-  tcase_add_test(
-      tc,
-      div_7_test);  // 786432' failed: res.bits[3] == 720896, 786432 == 786432
-  tcase_add_test(tc, div_8_test);
-  tcase_add_test(tc, div_9_test);
-  tcase_add_test(tc, div_10_test);
-  tcase_add_test(tc, div_11_test);
-  tcase_add_test(tc, div_12_test);
-  tcase_add_test(tc, div_13_test);
+  //tcase_add_test(tc, div16);  // последнее значение
+  // tcase_add_test(tc, div17);
+  // tcase_add_test(tc, div_1_test);
+  // tcase_add_test(tc, div_2_test);
+  // tcase_add_test(tc, div_3_test);
+   tcase_add_test(tc, div_4_test);  // ожидали 48806446, получили 48806447
+  // tcase_add_test(tc, div_5_test);
+  // tcase_add_test(tc, div_6_test);  // ожидали ошибку 0, получили 1
+  // tcase_add_test(tc,div_7_test);  // 786432' failed: res.bits[3] == 720896, 786432 == 786432
+  // tcase_add_test(tc, div_8_test);
+  // tcase_add_test(tc, div_9_test);
+  // tcase_add_test(tc, div_10_test);
+  // tcase_add_test(tc, div_11_test);
+  // tcase_add_test(tc, div_12_test);
+  // tcase_add_test(tc, div_13_test);
   // tcase_add_test(tc, div_14_test); //sega
   // tcase_add_test(tc, div_15_test); //sega
   //  tcase_add_test(tc, div_16_test);

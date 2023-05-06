@@ -29,10 +29,6 @@ int s21_div(s21_decimal value_1, s21_decimal value_2, s21_decimal *result) {
         s21_decimal buf = {0};
         s21_decimal ten = {{10, 0, 0, 0}};
         power = 0;
-        // while (is_greater_M(value_2, value_1)) {
-        //   multiplication(value_1, ten, &value_1);
-        //   //power++;
-        // }
         s21_bit_division(value_1, value_2, result);
         ost = Light_mod(value_1, value_2, *result);
         buf = *result;
