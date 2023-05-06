@@ -16,7 +16,8 @@ s21_decimal bank_round(s21_decimal bit) {
   if (is_uneven(ceil) && is_greater_or_equal_M(mod, five)) {
     s21_decimal one = {0};
     one.bits[0] = 1;
-    addition(ceil, one, &res, NULL);
+    int a = 0;
+    addition(ceil, one, &res, &a);
   }
   return res;
 }
@@ -66,7 +67,8 @@ void degree_of_two(s21_decimal *num, int degree) {
   } else {
     s21_decimal one = {0};
     one.bits[0] = 1;
-    addition(*num, one, num, NULL);
+    int a=0;
+    addition(*num, one, num, &a);
   }
 }
 
