@@ -35,6 +35,7 @@ int s21_div(s21_decimal value_1, s21_decimal value_2, s21_decimal *result) {
         while (!check_zero(ost) && ((power) != 28) &&
                !checkForOverflow(buf, ten)) {
           multiplication(buf, ten, &buf);
+
           multiplication(ost, ten, &ost);
           power++;
           s21_bit_division(ost, value_2, result);
