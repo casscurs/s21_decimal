@@ -17,7 +17,7 @@ typedef struct {
 } s21_decimal;
 
 typedef struct {
-  uint32_t bits[7];
+  uint32_t bits[8];
 } s21_big_decimal;
 
 typedef struct {

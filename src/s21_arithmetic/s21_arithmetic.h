@@ -162,6 +162,20 @@ int is_unevenBigDeicmal(s21_big_decimal bit);
 void s21_bit_modBigDeicmal(s21_big_decimal delim, s21_big_decimal delit,
                            s21_big_decimal *ostatok);
 s21_big_decimal bank_roundBigDeicmal(s21_big_decimal bit);
+s21_big_decimal simpleMultiplicationBigDecimal(s21_big_decimal big_value_1,
+                                               s21_big_decimal big_value_2);
+void positive_subBigDecimal(s21_big_decimal value_1, s21_big_decimal value_2,
+                            s21_big_decimal *result, int power);
+int v1_greater_v2BigDecimal(s21_big_decimal value_1, s21_big_decimal value_2,
+                            s21_big_decimal *result, int power);
+int v2_greater_v1BigDecimal(s21_big_decimal value_1, s21_big_decimal value_2,
+                            s21_big_decimal *result, int power);
+int setPowerBigDecimal(s21_big_decimal *dec, int power);
+void clearPowerBigDecimal(s21_big_decimal *dec);
+int getSignBigDecimal(s21_big_decimal decimal);
+void setSignBigDecimal(s21_big_decimal *decimal, int sign);
+int getPowerBigDecimal(s21_big_decimal dec);
+int isInfBigDecimal(const s21_big_decimal *el);
 // конец бигдецимал раздела - мб имеет смысл отдельный сишник и хедер
 
 #endif  // SRC_S21_ARITHMETIC_S21_ARITHMETIC_H_

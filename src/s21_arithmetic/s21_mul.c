@@ -122,6 +122,7 @@ s21_big_decimal decimalToBigDecimal(s21_decimal value) {
   result.bits[0] = value.bits[0];
   result.bits[1] = value.bits[1];
   result.bits[2] = value.bits[2];
+  result.bits[7] = value.bits[3];
   return result;
 }
 
@@ -168,20 +169,20 @@ void nullBigDecimal(s21_big_decimal *value) {
 }
 
 int getBitBigDecimal(s21_big_decimal decimal, int index) {
-  return (index >= 0 && index < 224)
+  return (index >= 0 && index < 256)
              ? !!(decimal.bits[index / 32] & (1u << (index % 32)))
              : -1;
 }
 
 int setBitBigDecimal(s21_big_decimal *decimal, int index, int value) {
-  if (index >= 0 && index < 224) {
+  if (index >= 0 && index < 256) {
     if (value) {
       decimal->bits[index / 32] |= (1u << (index % 32));
     } else {
       decimal->bits[index / 32] &= ~(1u << (index % 32));
     }
   }
-  return (index >= 0 && index < 224) ? 1 : -1;
+  return (index >= 0 && index < 256) ? 1 : -1;
 }
 
 s21_big_decimal leftshiftBigDecimal(s21_big_decimal bit) {
@@ -206,6 +207,7 @@ int find_oneBigDecimal(s21_big_decimal bit, int *pos) {
 
 void additionBigDecimal(s21_big_decimal value_1, s21_big_decimal value_2,
                         s21_big_decimal *result) {
+  nullBigDecimal(result);
   for (int index = 0; index < 224; index++) {
     switch (getBitBigDecimal(value_1, index) +
             getBitBigDecimal(value_2, index) +
@@ -251,29 +253,34 @@ s21_big_decimal bank_roundBigDeicmal(s21_big_decimal bit) {
 
 void s21_bit_modBigDeicmal(s21_big_decimal delim, s21_big_decimal delit,
                            s21_big_decimal *ostatok) {
-  memset(ostatok, 0, sizeof(s21_big_decimal));
+  nullBigDecimal(ostatok);
   if (is_greater_MBigDecimal(delit, delim)) {
     *ostatok = delim;
   } else {
     s21_big_decimal buf = {0};
     s21_bit_divisionBigDeicmal(delim, delit, &buf);
-    s21_big_decimal big_result = {0};
-    s21_big_decimal value_2_copied = buf;
-    s21_big_decimal sum = {0};
-    for (int index = 0; index < 224; index++) {
-      value_2_copied = delit;
-      if (getBitBigDecimal(delit, index) == 1) {
-        for (int i = 0; i < index; i++) {
-          value_2_copied = leftshiftBigDecimal(value_2_copied);
-        }
-        nullBigDecimal(&big_result);
-        additionBigDecimal(sum, value_2_copied, &big_result);
-        sum = big_result;
-      }
-    }
-    buf = big_result;
+    buf = simpleMultiplicationBigDecimal(delit, buf);
     Light_subBigDecimal(delim, buf, ostatok);
   }
+}
+
+s21_big_decimal simpleMultiplicationBigDecimal(s21_big_decimal big_value_1,
+                                               s21_big_decimal big_value_2) {
+  s21_big_decimal big_result = {0};
+  s21_big_decimal value_2_copied = big_value_2;
+  s21_big_decimal sum = {0};
+  for (int index = 0; index < 224; index++) {
+    value_2_copied = big_value_2;
+    if (getBitBigDecimal(big_value_1, index) == 1) {
+      for (int i = 0; i < index; i++) {
+        value_2_copied = leftshiftBigDecimal(value_2_copied);
+      }
+      nullBigDecimal(&big_result);
+      additionBigDecimal(sum, value_2_copied, &big_result);
+      sum = big_result;
+    }
+  }
+  return big_result;
 }
 
 int is_unevenBigDeicmal(s21_big_decimal bit) {
@@ -282,14 +289,24 @@ int is_unevenBigDeicmal(s21_big_decimal bit) {
 
 int s21_bit_divisionBigDeicmal(s21_big_decimal delim, s21_big_decimal delit,
                                s21_big_decimal *chast) {
-  memset(chast, 0, sizeof(s21_big_decimal));
+  nullBigDecimal(chast);
+  int flag = 0;
+  if ((getSignBigDecimal(delim) == (-1)) ^ (getSignBigDecimal(delit) == (-1))) {
+    flag = 1;
+  }
+  setSignBigDecimal(&delim, 1);
+  setSignBigDecimal(&delit, 1);
   if (is_equal_MBigDecimal(delim, delit)) {  // если числа равны
     chast->bits[0] = 1;
   } else if (!check_zeroBigDecimal(delim) &&
              is_greater_MBigDecimal(delim, delit)) {
     s21_big_decimal delitBuf = {0};
     delitBuf = delit;
-    div_first_decrementBigDeicmal(delim, delit, &delitBuf, chast);
+    div_first_decrementBigDeicmal(delim, delit, &delitBuf,
+                                  chast);  // первый этап декремента
+  }
+  if (flag) {
+    setSignBigDecimal(chast, -1);
   }
   return 0;
 }
@@ -312,8 +329,7 @@ void div_first_decrementBigDeicmal(s21_big_decimal delim, s21_big_decimal delit,
                                    s21_big_decimal *chast) {
   int count1 = 0;
   while (
-      is_greater_or_equal_MBigDecimal(delim, leftshiftBigDecimal(*delitBuf)) &&
-      !getBitBigDecimal(leftshiftBigDecimal(*delitBuf), 96)) {
+      is_greater_or_equal_MBigDecimal(delim, leftshiftBigDecimal(*delitBuf))) {
     *delitBuf = leftshiftBigDecimal(*delitBuf);
     count1++;
   }
@@ -321,7 +337,6 @@ void div_first_decrementBigDeicmal(s21_big_decimal delim, s21_big_decimal delit,
     degree_of_twoBigDeicmal(chast, count1);  // запись ответа
     s21_big_decimal razn = {0};
     Light_subBigDecimal(delim, *delitBuf, &razn);  // BIG DECIMAL !_!_!_!
-    // BIG DECIMAL !_!_!_!
     while (is_greater_or_equal_MBigDecimal(razn, delit)) {
       div_second_decrementBigDeicmal(
           delit, delitBuf, chast,
@@ -338,14 +353,13 @@ void div_second_decrementBigDeicmal(s21_big_decimal delit,
                                     s21_big_decimal *razn) {
   int count2 = 0;
   *delitBuf = delit;
-  // BIG DECIMAL !_!_!_!
   while (
       is_greater_or_equal_MBigDecimal(*razn, leftshiftBigDecimal(*delitBuf))) {
     *delitBuf = leftshiftBigDecimal(*delitBuf);
     count2++;
   }
-  Light_subBigDecimal(*razn, *delitBuf, razn);  // BIG DECIMAL !_!_!_!
-  memset(delitBuf, 0, sizeof(s21_big_decimal));
+  Light_subBigDecimal(*razn, *delitBuf, razn);
+  nullBigDecimal(delitBuf);
   degree_of_twoBigDeicmal(delitBuf, count2);
   additionBigDecimal(*chast, *delitBuf, chast);
 }
@@ -365,11 +379,98 @@ void degree_of_twoBigDeicmal(s21_big_decimal *num, int degree) {
 
 void Light_subBigDecimal(s21_big_decimal value_1, s21_big_decimal value_2,
                          s21_big_decimal *result) {
+  nullBigDecimal(result);
+  switch (getSignBigDecimal(value_1) * getSignBigDecimal(value_2)) {
+    case 1:
+      int a = 0;
+      positive_subBigDecimal(value_1, value_2, result, a);
+      break;
+    case -1:
+      if (getSignBigDecimal(value_1) == (-1)) {
+        setSignBigDecimal(&value_1, 1);
+
+        additionBigDecimal(value_1, value_2, result);
+        setSignBigDecimal(result, -1);
+      }
+      if (getSignBigDecimal(value_2) == (-1)) {
+        setSignBigDecimal(&value_2, 1);
+        additionBigDecimal(value_1, value_2, result);
+      }
+      break;
+  }
+}
+
+void positive_subBigDecimal(s21_big_decimal value_1, s21_big_decimal value_2,
+                            s21_big_decimal *result, int power) {
+  if ((getSignBigDecimal(value_1) == (-1)) &&
+      (getSignBigDecimal(value_2) == (-1))) {
+    setSignBigDecimal(&value_1, 1);
+    setSignBigDecimal(&value_2, 1);
+    if (v1_greater_v2BigDecimal(value_1, value_2, result, power)) {
+      setSignBigDecimal(result, -1);
+    }
+    if (v2_greater_v1BigDecimal(value_1, value_2, result, power)) {
+      setSignBigDecimal(result, 1);
+    }
+  } else {
+    v1_greater_v2BigDecimal(value_1, value_2, result, power);
+    v2_greater_v1BigDecimal(value_1, value_2, result, power);
+  }
+}
+
+int v1_greater_v2BigDecimal(s21_big_decimal value_1, s21_big_decimal value_2,
+                            s21_big_decimal *result, int power) {
+  int res = 0;
   if (is_greater_MBigDecimal(value_1, value_2)) {
     s21_bit_subBigDecimal(value_1, value_2, result);
+    setPowerBigDecimal(result, power);
+    res = 1;
   }
+  return res;
+}
+int v2_greater_v1BigDecimal(s21_big_decimal value_1, s21_big_decimal value_2,
+                            s21_big_decimal *result, int power) {
+  int res = 0;
   if (is_greater_MBigDecimal(value_2, value_1)) {
     s21_bit_subBigDecimal(value_2, value_1, result);
+    setPowerBigDecimal(result, power);
+    setSignBigDecimal(result, -1);
+    res = 1;
+  }
+  return res;
+}
+
+int setPowerBigDecimal(s21_big_decimal *dec, int power) {
+  int is_error = 0;
+  if (power < 0) {
+    is_error = 1;
+  } else {
+    clearPowerBigDecimal(dec);
+    dec->bits[7] |= power << 16;  // set new power
+  }
+  return is_error;
+}
+
+void clearPowerBigDecimal(s21_big_decimal *dec) {
+  int sign = 0;
+  if (getSignBigDecimal(*dec) == -1) {
+    sign = 1;
+  }
+  dec->bits[7] = 0;
+  if (sign) {
+    dec->bits[7] |= 1u << 31;
+  }
+}
+
+int getSignBigDecimal(s21_big_decimal decimal) {
+  return ((decimal.bits[7] >> 31) & 1u) ? -1 : 1;
+}
+
+void setSignBigDecimal(s21_big_decimal *decimal, int sign) {
+  if (sign == 1) {
+    setBitBigDecimal(decimal, 255, 0);
+  } else if (sign == -1) {
+    setBitBigDecimal(decimal, 255, 1);
   }
 }
 
@@ -390,22 +491,62 @@ int is_equal_MBigDecimal(s21_big_decimal el1, s21_big_decimal el2) {
 
 int decCmp_MBigDecimal(s21_big_decimal el1, s21_big_decimal el2) {
   int res = 0;
-  for (int i = 223; i >= 0 && res == 0; --i) {
-    int cur_bit1 = getBitBigDecimal(el1, i),
-        cur_bit2 = getBitBigDecimal(el2, i);
-    if (cur_bit1 != cur_bit2) {
-      res = cur_bit1 - cur_bit2;
+  if (check_zeroBigDecimal(el1)) {
+    setSignBigDecimal(&el1, 1);
+  }
+  if (check_zeroBigDecimal(el2)) {
+    setSignBigDecimal(&el2, 1);
+  }
+  int sign1 = getSignBigDecimal(el1), sign2 = getSignBigDecimal(el2);
+  if ((isInfBigDecimal(&el1) == 1 && isInfBigDecimal(&el2) == 0) ||
+      (isInfBigDecimal(&el1) == 0 && isInfBigDecimal(&el2) == -1) ||
+      (sign1 > sign2)) {  //  первый точно больше
+    res = 1;
+  } else if ((isInfBigDecimal(&el1) == 0 && isInfBigDecimal(&el2) == 1) ||
+             (isInfBigDecimal(&el1) == -1 && isInfBigDecimal(&el2) == 0) ||
+             (sign1 < sign2)) {  //  второй точно больше
+    res = -1;
+  } else {
+    res = 0;
+    for (int i = 223; i >= 0 && res == 0;
+         --i) {  //  сравниваем мантисы побитово, пока равны
+      int cur_bit1 = getBitBigDecimal(el1, i),
+          cur_bit2 = getBitBigDecimal(el2, i);
+      // if (i >= 0 && i <= 5) printf("%d %d\n", cur_bit1, cur_bit2);
+      if (cur_bit1 != cur_bit2) {
+        res = cur_bit1 - cur_bit2;
+      }
+    }
+    // printf("res = %d\n", res);
+    if (sign1 == -1) {  //  инвертируем, если оба отрицательные
+      res = -res;
+    }
+  }
+  // printf("#%d\n", res);
+  return res;
+}
+
+int isInfBigDecimal(const s21_big_decimal *el) {
+  int res = 0;
+  if (el != NULL) {
+    if (getPowerBigDecimal(*el) == 255 && (el->bits[2] == 0) &&
+        (el->bits[1] == 0) && (el->bits[0] == 0) && (el->bits[3] == 0) &&
+        (el->bits[4] == 0) && (el->bits[5] == 0) && (el->bits[6] == 0)) {
+      res = 1;
+    }
+    if (getSignBigDecimal(*el) == 1) {
+      res = -res;
     }
   }
   return res;
 }
 
+int getPowerBigDecimal(s21_big_decimal dec) {
+  return (dec.bits[7] >> 16u) & 255;
+}
+
 int s21_bit_subBigDecimal(s21_big_decimal bit1, s21_big_decimal bit2,
                           s21_big_decimal *res) {
-  if (res == NULL) {
-    exit(1);
-  }
-  memset(res, 0, sizeof(s21_big_decimal));
   int flag = 0;
   int mindone = 0;
   for (int j = 0; j < 96; ++j) {
