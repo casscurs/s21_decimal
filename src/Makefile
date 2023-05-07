@@ -11,7 +11,7 @@ ifeq ($(shell uname), Linux)
 endif
 
 
-all: clean check-style s21_decimal.a test #gcov_report
+all: clean check-style s21_decimal.a test gcov_report
 
 s21_decimal.a:
 	$(CC) $(FLAGS) $(SRC_FILES) -c
