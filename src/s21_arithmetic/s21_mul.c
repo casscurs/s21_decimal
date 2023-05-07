@@ -380,9 +380,10 @@ void degree_of_twoBigDeicmal(s21_big_decimal *num, int degree) {
 void Light_subBigDecimal(s21_big_decimal value_1, s21_big_decimal value_2,
                          s21_big_decimal *result) {
   nullBigDecimal(result);
+  int a = 0;
   switch (getSignBigDecimal(value_1) * getSignBigDecimal(value_2)) {
     case 1:
-      int a = 0;
+      a = 0;
       positive_subBigDecimal(value_1, value_2, result, a);
       break;
     case -1:
