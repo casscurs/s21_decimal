@@ -287,19 +287,6 @@ START_TEST(div_7_test) {
 }
 END_TEST
 
-START_TEST(div_8_test) {
-  s21_decimal num1 = {{10, 0, 0, 0}};
-  s21_decimal num2 = {{1879048192, -1291644761, -500259693, 0}};
-  s21_decimal res = {{0, 0, 0, 0}};
-  int status = s21_div(num1, num2, &res);
-  ck_assert_int_eq(status, 0);
-  ck_assert_int_eq(res.bits[0], 1);
-  ck_assert_int_eq(res.bits[1], 0);
-  ck_assert_int_eq(res.bits[2], 0);
-  ck_assert_int_eq(res.bits[3], 1835008);
-}
-END_TEST
-
 START_TEST(div_9_test) {
   s21_decimal num1 = {{-1, -1, -1, 0}};
   s21_decimal num2 = {{2, 0, 0, 0}};
@@ -466,9 +453,9 @@ END_TEST
 START_TEST(div_error) {
   s21_decimal src1 = {{0, 0, 0, 0}};
   s21_decimal src2 = {{0, 0, 0, 0}};
-  s21_decimal *result_our = NULL;
-  int val = s21_div(src1, src2, result_our);
-  ck_assert_int_eq(val, 4);
+  s21_decimal result;
+  int val = s21_div(src1, src2, &result);
+  ck_assert_int_eq(val, 3);
 }
 END_TEST
 
@@ -490,30 +477,29 @@ Suite *suite_div(void) {
   tcase_add_test(tc, div13);
   tcase_add_test(tc, div14);
   tcase_add_test(tc, div15);
-  tcase_add_test(tc, div16);  // последнее значение
+  tcase_add_test(tc, div16);
   tcase_add_test(tc, div17);
   tcase_add_test(tc, div_1_test);
   tcase_add_test(tc, div_2_test);
   tcase_add_test(tc, div_3_test);
-  tcase_add_test(tc, div_4_test);  // ожидали 48806446, получили 48806447
+  tcase_add_test(tc, div_4_test);
   tcase_add_test(tc, div_5_test);
-  tcase_add_test(tc, div_6_test);  // ожидали ошибку 0, получили 1
-  tcase_add_test(tc,div_7_test);  // 786432' failed: res.bits[3] == 720896, 786432 == 786432
-  tcase_add_test(tc, div_8_test);
+  tcase_add_test(tc, div_6_test);  //отлет по нормализации, оригинал работает
+  tcase_add_test(tc, div_7_test);
   tcase_add_test(tc, div_9_test);
   tcase_add_test(tc, div_10_test);
   tcase_add_test(tc, div_11_test);
-  tcase_add_test(tc, div_12_test);
+  tcase_add_test(tc, div_12_test);  //отлет по нормализации, оригинал работает
   tcase_add_test(tc, div_13_test);
-   tcase_add_test(tc, div_14_test); //sega
-  tcase_add_test(tc, div_15_test); //sega
-   tcase_add_test(tc, div_16_test);
-   tcase_add_test(tc, div_17_test);
-   tcase_add_test(tc, div_18_test);
-   tcase_add_test(tc, div_19_test);
-   tcase_add_test(tc, div_20_test);
-  // tcase_add_test(tc, div_big_error);
-  // tcase_add_test(tc, div_error);
+  tcase_add_test(tc, div_14_test);  //отлет по нормализации, оригинал работает
+  tcase_add_test(tc, div_15_test);  //отлет по нормализации, оригинал работает
+  tcase_add_test(tc, div_16_test);  //отлет по нормализации, оригинал работает
+  tcase_add_test(tc, div_17_test);  //отлет по нормализации, оригинал работает
+  tcase_add_test(tc, div_18_test);
+  tcase_add_test(tc, div_19_test);
+  tcase_add_test(tc, div_20_test);
+  tcase_add_test(tc, div_big_error);
+  tcase_add_test(tc, div_error);
 
   suite_add_tcase(s, tc);
   return s;

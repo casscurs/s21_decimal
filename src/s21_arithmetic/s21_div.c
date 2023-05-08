@@ -6,6 +6,18 @@ void InfDivCase(s21_error_type *error, s21_decimal *result);
 void denomZero(s21_decimal value_1, s21_decimal value_2, s21_error_type *error);
 s21_decimal Light_mod(s21_decimal delim, s21_decimal delit, s21_decimal chast);
 
+int check_one(s21_decimal decimal) {
+  int res = 0;
+  res = 1;
+  for (int i = 0; i < 96; ++i) {
+    if (getBit(decimal, i) == 0) {
+      res = 0;
+      break;
+    }
+  }
+  return res;
+}
+
 int s21_div(s21_decimal value_1, s21_decimal value_2, s21_decimal *result) {
   memcheck(result);
   s21_error_type error = {0};
@@ -28,28 +40,36 @@ int s21_div(s21_decimal value_1, s21_decimal value_2, s21_decimal *result) {
         s21_decimal ost = {0};
         s21_decimal buf = {0};
         s21_decimal ten = {{10, 0, 0, 0}};
+        s21_decimal five = {{5, 0, 0, 0}};
+        s21_decimal one = {{1, 0, 0, 0}};
         power = 0;
         s21_bit_division(value_1, value_2, result);
         ost = Light_mod(value_1, value_2, *result);
         buf = *result;
-        int a=0;
+        int a = 0;
         while (!check_zero(ost) && ((power) != 28) &&
                !checkForOverflow(buf, ten)) {
           multiplication(buf, ten, &buf);
           multiplication(ost, ten, &ost);
-          // if (!checkForOverflow(ost, ten)){
-          //   multiplication(ost, ten, &ost);
-          // }
-          //s21_mul(ost, ten, &ost);
           power++;
           s21_bit_division(ost, value_2, result);
           addition(buf, *result, &buf, &a);
           ost = Light_mod(ost, value_2, *result);
         }
+        if (!check_zero(ost)) {
+          multiplication(ost, ten, &ost);
+          s21_bit_division(ost, value_2, result);
+          if (is_greater_or_equal_M(*result, five)) {
+            s21_add(one, buf, &buf);
+          }
+        }
         *result = buf;
         setPower(result, power);
         if (flag) {
           setSign(result, -1);
+        }
+        if (check_zero(*result) && power >= 28) {
+          error.minus_inf = 1;
         }
       }
     }
@@ -133,13 +153,14 @@ void div_second_decrement(s21_decimal delit, s21_decimal *delitBuf,
                           s21_decimal *chast, s21_decimal *razn) {
   int count2 = 0;
   *delitBuf = delit;  // вернули буфер к исходнику
-  while (is_greater_or_equal_M(*razn, leftshift(*delitBuf))) {
+  while (is_greater_or_equal_M(*razn, leftshift(*delitBuf)) &&
+         !getBit(leftshift(*delitBuf), 96)) {
     *delitBuf = leftshift(*delitBuf);
     count2++;
   }
   Light_sub(*razn, *delitBuf, razn);
   memset(delitBuf, 0, sizeof(s21_decimal));
   degree_of_two(delitBuf, count2);
-  int a=0;
+  int a = 0;
   addition(*chast, *delitBuf, chast, &a);
 }

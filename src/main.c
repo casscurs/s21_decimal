@@ -36,9 +36,9 @@ void run_tests(void) {
       //                        suite_truncate(),
       //                        suite_round(),
       //                        suite_floor(),
-      //                        suite_add(),
+      //                       suite_add(),
       //  suite_mul(),
-      //  suite_sub(),
+      // suite_sub(),
       suite_div(), s21_NULL};
 
   for (Suite **current_testcase = list_cases; *current_testcase != s21_NULL;

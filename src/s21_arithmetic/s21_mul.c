@@ -79,12 +79,12 @@ void multiplication(s21_decimal value_1, s21_decimal value_2,
   for (int index = 0; index < 96; index++) {
     value_2_copied = value_2;
     if (getBit(value_1, index) == 1) {
-      for (int i = 0; i < index; i++) {
+      for (int i = 0; (i < index); i++) {
         value_2_copied = leftshift(value_2_copied);
         setBit(&value_2_copied, 96, 0);
       }
       memset(result, 0, sizeof(s21_decimal));
-      int a=0;
+      int a = 0;
       addition(sum, value_2_copied, result, &a);
       sum = *result;
     }
