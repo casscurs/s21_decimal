@@ -20,6 +20,13 @@ typedef struct {
   uint32_t bits[8];
 } s21_big_decimal;
 
+// #define BITS 8
+// #define OPTS BITS - 1
+// #define NUMS BITS - 2
+// typedef struct {
+//   uint32_t bits[BITS];
+// } big_decimal;
+
 typedef struct {
   int plus_inf;
   int minus_inf;

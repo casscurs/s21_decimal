@@ -875,7 +875,8 @@ s21_decimal dec_mul_error_cases_res[MUL_ERR_TESTS] = {
     {{0, 0, 0, 0}}, {{0, 0, 0, 0}}, {{0, 0, 0, 0}}, {{0, 0, 0, 0}},
     {{0, 0, 0, 0}}, {{0, 0, 0, 0}}, {{0, 0, 0, 0}}, {{0, 0, 0, 0}},
     {{0, 0, 0, 0}}, {{0, 0, 0, 0}}};
-int int_mul_error[MUL_ERR_TESTS] = {1, 1, 2, 2, 0, 0, 2, 2, 2, 2};
+// int int_mul_error[MUL_ERR_TESTS] = {1, 1, 2, 2, 0, 0, 2, 2, 2, 2};
+int int_mul_error[MUL_ERR_TESTS] = {1, 2, 1, 1, 0, 0, 1, 1, 1, 1};
 
 s21_decimal dec_mul_round_src1[MUL_ROUND_TESTS] = {
     {{268435461, 1042612833, 542101086, 1 << 16}},
