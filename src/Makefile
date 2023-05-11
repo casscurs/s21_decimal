@@ -20,7 +20,6 @@ s21_decimal.a:
 
 test: s21_decimal.a
 	$(CC) $(FLAGS) -g $(SRC_TESTS) s21_decimal.a $(TEST_FLAGS) -o test
-	./test
 
 check-style:
 	clang-format -n -style=Google *.h tests/*.h $(SRC_TESTS) $(SRC_FILES)

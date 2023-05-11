@@ -7,8 +7,6 @@
 
 //  bit opertions helpers
 ////
-void Bin_Print(s21_decimal bit);
-void Dec_Print(s21_decimal bit);
 void memcheck(s21_decimal *result);
 
 int getPower(s21_decimal dec);
