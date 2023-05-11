@@ -32,47 +32,6 @@ int s21_div(s21_decimal value_1, s21_decimal value_2, s21_decimal *result) {
         denomZero(value_1, value_2, &error);
         error.nan = 1;
       } else {
-        // int flag = 0;
-        // if ((getSign(value_1) == (-1)) ^ (getSign(value_2) == (-1))) {
-        //   flag = 1;
-        // }
-        // setSign(&value_1, 1);
-        // setSign(&value_2, 1);
-        // int power = 0;
-        // s21_decimal ost = {0};
-        // s21_decimal buf = {0};
-        // s21_decimal ten = {{10, 0, 0, 0}};
-        // s21_decimal five = {{5, 0, 0, 0}};
-        // s21_decimal one = {{1, 0, 0, 0}};
-        // power = 0;
-        // s21_bit_division(value_1, value_2, result);
-        // ost = Light_mod(value_1, value_2, *result);
-        // buf = *result;
-        // int a = 0;
-        // while (!check_zero(ost) && ((power) != 28) &&
-        //        !checkForOverflow(buf, ten)) {
-        //   multiplication(buf, ten, &buf);
-        //   multiplication(ost, ten, &ost);
-        //   power++;
-        //   s21_bit_division(ost, value_2, result);
-        //   addition(buf, *result, &buf, &a);
-        //   ost = Light_mod(ost, value_2, *result);
-        // }
-        // if (!check_zero(ost)) {
-        //   multiplication(ost, ten, &ost);
-        //   s21_bit_division(ost, value_2, result);
-        //   if (is_greater_or_equal_M(*result, five)) {
-        //     s21_add(one, buf, &buf);
-        //   }
-        // }
-        // *result = buf;
-        // setPower(result, power);
-        // if (flag) {
-        //   setSign(result, -1);
-        // }
-        // if (check_zero(*result) && power >= 28) {
-        //   error.minus_inf = 1;
-        // }
         protectedDiv(&value_1, &value_2, result, &error);
       }
     }
