@@ -1,3 +1,7 @@
+../.DS_Store
+.DS_Store
+./
+
 # Prerequisites
 *.d
 
@@ -50,3 +54,6 @@ modules.order
 Module.symvers
 Mkfile.old
 dkms.conf
+
+# mine
+/.vscode
