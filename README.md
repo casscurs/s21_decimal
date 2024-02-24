@@ -1,6 +1,6 @@
 # s21_decimal 
 
-This is a team project developed in collaboration with Aftonbur, Aquamanp, Arvillaj also student of School 21 in Moscow.
+This is a team project developed in collaboration with Aftonbur, Aquamanp, Arvillaj also students of School 21 in Moscow.
 
 Implementation of your own s21_decimal.h library.
 
